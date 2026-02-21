@@ -22,23 +22,33 @@ app.add_middleware(
 cards = [
     {
         "name": "Маг",
-        "image": "/images/magician.jpg"
+        "image": "/images/magician.jpg",
+        "meaning": "Сила воли, уверенность, действие.",
+        "advice": "Используй свои ресурсы."
     },
     {
         "name": "Императрица",
-        "image": "/images/empress.jpg"
+        "image": "/images/empress.jpg",
+        "meaning": "Женственность, забота, изобилие.",
+        "advice": "Позволь себе принять и насладиться."
     },
     {
         "name": "Влюбленные",
-        "image": "/images/lovers.jpg"
+        "image": "/images/lovers.jpg",
+        "meaning": "Выбор, чувства, союз.",
+        "advice": "Слушай сердце."
     },
     {
         "name": "Жрица",
-        "image": "/images/high_priestess.jpg"
+        "image": "/images/high_priestess.jpg",
+        "meaning": "Интуиция, тайна, внутренний голос.",
+        "advice": "Доверься внутреннему знанию."
     },
     {
         "name": "Шут",
-        "image": "/images/fool.jpg"
+        "image": "/images/fool.jpg",
+        "meaning": "Новое начало, свобода, риск.",
+        "advice": "Не бойся сделать первый шаг."
     }
 ]
 
