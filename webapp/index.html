@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Velvet Tarot</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #111122, #1c1c3a);
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 40px;
+}
+
+.menu {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 30px;
+}
+
+button {
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #6c5ce7;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🃏 Velvet Tarot</h1>
+
+<div class="menu">
+    <button onclick="send('card_day')">🔮 Карта дня</button>
+    <button onclick="send('love_spread')">💖 Расклад на любовь</button>
+    <button onclick="send('situation_spread')">⚡ Расклад на ситуацию</button>
+    <button onclick="send('archetype')">🧬 Мой архетип</button>
+    <button onclick="send('month_energy')">🌙 Энергия месяца</button>
+</div>
+
+<script>
+function send(action) {
+    Telegram.WebApp.sendData(action);
+    Telegram.WebApp.close();
+}
+</script>
+
+</body>
+</html>
