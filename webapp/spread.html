@@ -1,129 +1,165 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Velvet Tarot — Расклад</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velvet Tarot</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(180deg, #0f0c29, #1b1340);
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #1c1445 0%, #0f0c29 60%);
     color: white;
     text-align: center;
-}
-
-.container {
-    padding: 20px;
+    overflow-x: hidden;
 }
 
 h1 {
-    margin-bottom: 30px;
+    margin-top: 25px;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .cards {
+    margin-top: 40px;
     display: flex;
     justify-content: center;
-    gap: 15px;
-    flex-wrap: nowrap;
+    gap: 18px;
+}
+
+.card-wrapper {
+    text-align: center;
 }
 
 .card {
-    width: 30%;
-    max-width: 120px;
-    aspect-ratio: 2/3;
-    background: linear-gradient(135deg, #5f4ae3, #7d66ff);
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.4s ease;
-    opacity: 0;
-    transform: translateY(20px);
+    width: 110px;
+    height: 170px;
+    perspective: 1000px;
 }
 
-.card img {
+.card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.card.show .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    backface-visibility: hidden;
+}
+
+.card-front {
+    background: linear-gradient(135deg, #6a5cff, #8a7bff);
+    box-shadow: 0 0 20px rgba(138, 123, 255, 0.6);
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    overflow: hidden;
+}
+
+.card-back img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 15px;
-}
-
-.card.show {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 .label {
-    margin-top: 8px;
-    font-size: 14px;
+    margin-top: 10px;
     opacity: 0.8;
 }
 
 .back-btn {
-    margin-top: 40px;
-    padding: 12px 30px;
-    background: linear-gradient(135deg, #6a5cff, #8a7bff);
-    border: none;
+    margin-top: 45px;
+    padding: 12px 28px;
     border-radius: 12px;
-    color: white;
+    border: none;
     font-size: 16px;
+    background: linear-gradient(135deg, #6a5cff, #8a7bff);
+    color: white;
+    box-shadow: 0 0 15px rgba(138, 123, 255, 0.6);
+}
+
+.fade-in {
+    animation: fadeIn 1s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-    <h1>🃏 Твой расклад</h1>
+<h1 class="fade-in">✨ Твой расклад ✨</h1>
 
-    <div class="cards">
-        <div>
-            <div class="card" id="card1"></div>
-            <div class="label">Прошлое</div>
+<div class="cards">
+
+    <div class="card-wrapper">
+        <div class="card" id="card1">
+            <div class="card-inner">
+                <div class="card-front"></div>
+                <div class="card-back" id="img1"></div>
+            </div>
         </div>
-        <div>
-            <div class="card" id="card2"></div>
-            <div class="label">Настоящее</div>
-        </div>
-        <div>
-            <div class="card" id="card3"></div>
-            <div class="label">Будущее</div>
-        </div>
+        <div class="label">Прошлое</div>
     </div>
 
-    <button class="back-btn" onclick="goBack()">Назад</button>
+    <div class="card-wrapper">
+        <div class="card" id="card2">
+            <div class="card-inner">
+                <div class="card-front"></div>
+                <div class="card-back" id="img2"></div>
+            </div>
+        </div>
+        <div class="label">Настоящее</div>
+    </div>
+
+    <div class="card-wrapper">
+        <div class="card" id="card3">
+            <div class="card-inner">
+                <div class="card-front"></div>
+                <div class="card-back" id="img3"></div>
+            </div>
+        </div>
+        <div class="label">Будущее</div>
+    </div>
+
 </div>
+
+<button class="back-btn" onclick="goBack()">Назад</button>
 
 <script>
 Telegram.WebApp.expand();
 
 async function loadSpread() {
-    try {
-        const response = await fetch("https://velvet-tarot.onrender.com/draw-spread");
-        const data = await response.json();
+    const response = await fetch("https://velvet-tarot.onrender.com/draw-spread");
+    const data = await response.json();
 
-        const cards = [
-            document.getElementById("card1"),
-            document.getElementById("card2"),
-            document.getElementById("card3")
-        ];
+    const cards = ["card1","card2","card3"];
+    const imgs = ["img1","img2","img3"];
 
-        data.forEach((card, index) => {
-            setTimeout(() => {
-                cards[index].innerHTML =
-                    `<img src="https://velvet-tarot.onrender.com${card.image}">`;
-                cards[index].classList.add("show");
-            }, index * 500);
-        });
-
-    } catch (error) {
-        console.error("Ошибка загрузки:", error);
-    }
+    data.forEach((card, index) => {
+        setTimeout(() => {
+            document.getElementById(imgs[index]).innerHTML =
+                `<img src="https://velvet-tarot.onrender.com${card.image}">`;
+            document.getElementById(cards[index]).classList.add("show");
+        }, index * 800);
+    });
 }
 
 loadSpread();
