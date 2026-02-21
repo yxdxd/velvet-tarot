@@ -10,28 +10,19 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #0f0c22;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at 50% 30%, #241b4f 0%, #0f0c22 60%);
     color: white;
-}
-
-/* Фон */
-.bg {
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 50% 30%, #241b4f 0%, #0f0c22 60%);
-    z-index: -1;
+    overflow: hidden;
 }
 
 /* Центрирование */
 .wrapper {
-    min-height: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
     text-align: center;
 }
 
@@ -46,7 +37,7 @@ html, body {
 }
 
 /* Кнопка */
-button {
+.btn {
     padding: 15px 28px;
     background: linear-gradient(135deg, #6a5cff, #8a7bff);
     border: none;
@@ -56,17 +47,18 @@ button {
     font-weight: 500;
     cursor: pointer;
     box-shadow: 0 10px 30px rgba(106,92,255,0.3);
+    transition: 0.2s ease;
     opacity: 0;
     transform: translateY(10px);
     animation: fadeIn 0.8s ease forwards;
     animation-delay: 0.3s;
 }
 
-button:active {
+.btn:active {
     transform: scale(0.97);
 }
 
-/* Анимация */
+/* Анимация появления */
 @keyframes fadeIn {
     to {
         opacity: 1;
@@ -78,6 +70,8 @@ button:active {
 .footer {
     position: absolute;
     bottom: 15px;
+    width: 100%;
+    text-align: center;
     font-size: 13px;
     opacity: 0.4;
 }
@@ -86,13 +80,11 @@ button:active {
 
 <body>
 
-<div class="bg"></div>
-
 <div class="wrapper">
 
     <div class="title">🔮 Одна карта</div>
 
-    <button onclick="drawCard()">Вытянуть карту</button>
+    <button class="btn" onclick="drawCard()">Вытянуть карту</button>
 
 </div>
 
