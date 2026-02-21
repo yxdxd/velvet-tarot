@@ -13,7 +13,6 @@ html, body {
     background: #0f0c22;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     color: white;
-    overflow-x: hidden;
 }
 
 .bg {
@@ -28,7 +27,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 25px 15px 80px;
+    padding: 30px 20px 80px;
 }
 
 .title {
@@ -37,25 +36,17 @@ html, body {
     margin-bottom: 30px;
 }
 
-.cards {
+/* Ограничиваем ширину */
+.spread-container {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    max-width: 420px;
 }
 
-/* ФИКСИМ размеры вручную */
-.card {
-    width: 100%;
-    height: 170px;
-    border-radius: 16px;
-    background: linear-gradient(145deg, #5f55d4, #453bbf);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+/* Карты */
+.cards {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 13px;
-    flex: 1;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .card-container {
@@ -63,6 +54,18 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.card {
+    width: 100%;
+    height: 160px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #5f55d4, #453bbf);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
 }
 
 .label {
@@ -79,6 +82,7 @@ html, body {
     border-radius: 12px;
     color: white;
     font-size: 14px;
+    cursor: pointer;
 }
 
 .footer {
@@ -98,20 +102,24 @@ html, body {
 
     <div class="title">🃏 Твой расклад</div>
 
-    <div class="cards">
-        <div class="card-container">
-            <div class="card">Прошлое</div>
-            <div class="label">Прошлое</div>
-        </div>
+    <div class="spread-container">
+        <div class="cards">
 
-        <div class="card-container">
-            <div class="card">Настоящее</div>
-            <div class="label">Настоящее</div>
-        </div>
+            <div class="card-container">
+                <div class="card">Прошлое</div>
+                <div class="label">Прошлое</div>
+            </div>
 
-        <div class="card-container">
-            <div class="card">Будущее</div>
-            <div class="label">Будущее</div>
+            <div class="card-container">
+                <div class="card">Настоящее</div>
+                <div class="label">Настоящее</div>
+            </div>
+
+            <div class="card-container">
+                <div class="card">Будущее</div>
+                <div class="label">Будущее</div>
+            </div>
+
         </div>
     </div>
 
