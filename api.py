@@ -1,8 +1,9 @@
 import random
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
+from fastapi.responses import FileResponse
 from tarot_cards import tarot_cards
 
 app = FastAPI()
@@ -46,3 +47,7 @@ def draw_spread():
         "present": prepare_card(cards[1]),
         "future": prepare_card(cards[2])
     }
+
+@app.get("/")
+def root():
+    return FileResponse(os.path.join("webapp", "index.html"))
