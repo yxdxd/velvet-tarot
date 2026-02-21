@@ -1,13 +1,13 @@
 import random
-import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from tarot_cards import tarot_cards
 
 app = FastAPI()
 
+# ---------------------------
+# CORS (чтобы WebApp мог обращаться к API)
+# ---------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,38 +16,52 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Если потом добавим изображения
-app.mount("/images", StaticFiles(directory="images"), name="images")
-
-
-def prepare_card(card):
-    is_reversed = random.choice([True, False])
-
-    return {
-        "name": card["name"],
-        "position": "Перевёрнутая" if is_reversed else "Прямая",
-        "meaning": card["reversed"] if is_reversed else card["meaning"],
-        "advice": card["advice"],
-        "reversed": is_reversed
+# ---------------------------
+# Карты
+# ---------------------------
+cards = [
+    {
+        "name": "Маг",
+        "image": "/images/magician.jpg"
+    },
+    {
+        "name": "Императрица",
+        "image": "/images/empress.jpg"
+    },
+    {
+        "name": "Влюбленные",
+        "image": "/images/lovers.jpg"
+    },
+    {
+        "name": "Жрица",
+        "image": "/images/high_priestess.jpg"
+    },
+    {
+        "name": "Шут",
+        "image": "/images/fool.jpg"
     }
+]
 
+# ---------------------------
+# API endpoints
+# ---------------------------
 
 @app.get("/draw-card")
 def draw_card():
-    card = random.choice(tarot_cards)
-    return prepare_card(card)
+    return random.choice(cards)
 
 
 @app.get("/draw-spread")
 def draw_spread():
-    cards = random.sample(tarot_cards, 3)
+    return random.sample(cards, 3)
 
-    return {
-        "past": prepare_card(cards[0]),
-        "present": prepare_card(cards[1]),
-        "future": prepare_card(cards[2])
-    }
 
-@app.get("/")
-def root():
-    return FileResponse(os.path.join("webapp", "index.html"))
+# ---------------------------
+# Подключаем картинки
+# ---------------------------
+app.mount("/images", StaticFiles(directory="images"), name="images")
+
+# ---------------------------
+# Подключаем webapp (HTML страницы)
+# ---------------------------
+app.mount("/", StaticFiles(directory="webapp", html=True), name="webapp")
