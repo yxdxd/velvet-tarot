@@ -6,119 +6,136 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #0f0c22;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    color: white;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at top, #1e1440, #0d0922 70%);
+  color: white;
+  text-align: center;
 }
 
-/* Фон */
-.bg {
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at 50% 30%, #241b4f 0%, #0f0c22 65%);
-    z-index: -1;
+.container {
+  padding: 30px 20px;
 }
 
-/* Центрирование */
-.wrapper {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    text-align: center;
+h2 {
+  margin-bottom: 40px;
 }
 
-/* Заголовок */
-.title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 30px;
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: fadeIn 0.8s ease forwards;
+.cards {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
 }
 
-/* Подзаголовок */
-.subtitle {
-    font-size: 14px;
-    opacity: 0.6;
-    margin-bottom: 30px;
-    opacity: 0;
-    transform: translateY(-10px);
-    animation: fadeIn 0.8s ease forwards;
-    animation-delay: 0.2s;
+.card {
+  width: 110px;
+  height: 170px;
+  perspective: 1000px;
 }
 
-/* Кнопка */
+.inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+}
+
+.card.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  backface-visibility: hidden;
+}
+
+.front {
+  background: linear-gradient(135deg, #6f5cff, #3d2cb5);
+}
+
+.back {
+  transform: rotateY(180deg);
+  overflow: hidden;
+}
+
+.back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.label {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
 button {
-    padding: 15px 28px;
-    background: linear-gradient(135deg, #6a5cff, #8a7bff);
-    border: none;
-    border-radius: 14px;
-    color: white;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    box-shadow: 0 10px 30px rgba(106,92,255,0.3);
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeIn 0.8s ease forwards;
-    animation-delay: 0.4s;
-}
-
-button:active {
-    transform: scale(0.97);
-}
-
-/* Анимация */
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Подвал */
-.footer {
-    position: absolute;
-    bottom: 15px;
-    font-size: 13px;
-    opacity: 0.4;
+  margin-top: 40px;
+  padding: 14px 26px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #7b5cff, #5a3cff);
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<div class="container">
+  <h2>🃏 Твой расклад</h2>
 
-<div class="wrapper">
-
-    <div class="title">🃏 Прошлое – Настоящее – Будущее</div>
-
-    <div class="subtitle">
-        Три карты покажут путь, по которому ты идёшь
+  <div class="cards">
+    <div class="card" id="card0">
+      <div class="inner">
+        <div class="front"></div>
+        <div class="back"><img id="img0"></div>
+      </div>
+      <div class="label">Прошлое</div>
     </div>
 
-    <button onclick="openSpread()">Открыть расклад</button>
+    <div class="card" id="card1">
+      <div class="inner">
+        <div class="front"></div>
+        <div class="back"><img id="img1"></div>
+      </div>
+      <div class="label">Настоящее</div>
+    </div>
 
+    <div class="card" id="card2">
+      <div class="inner">
+        <div class="front"></div>
+        <div class="back"><img id="img2"></div>
+      </div>
+      <div class="label">Будущее</div>
+    </div>
+  </div>
+
+  <button onclick="location.href='/'">Назад</button>
 </div>
-
-<div class="footer">@VelvetTarotBot</div>
 
 <script>
 Telegram.WebApp.expand();
 
-function openSpread() {
-    window.location.href = "spread.html";
-}
+fetch("https://velvet-tarot.onrender.com/draw-spread")
+.then(res => res.json())
+.then(data => {
+  data.forEach((card, index) => {
+    setTimeout(() => {
+      document.getElementById("img"+index).src =
+        "https://velvet-tarot.onrender.com" + card.image;
+      document.getElementById("card"+index).classList.add("flipped");
+    }, index * 800);
+  });
+});
 </script>
 
 </body>
