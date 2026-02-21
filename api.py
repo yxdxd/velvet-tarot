@@ -3,11 +3,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from tarot_cards import tarot_cards
+
 app = FastAPI()
 
-# ---------------------------
-# CORS (чтобы WebApp мог обращаться к API)
-# ---------------------------
+# -------------------------
+# CORS (для Telegram WebApp)
+# -------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,62 +18,45 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------------------------
-# Карты
-# ---------------------------
-cards = [
-    {
-        "name": "Маг",
-        "image": "/images/magician.jpg",
-        "meaning": "Сила воли, уверенность, действие.",
-        "advice": "Используй свои ресурсы."
-    },
-    {
-        "name": "Императрица",
-        "image": "/images/empress.jpg",
-        "meaning": "Женственность, забота, изобилие.",
-        "advice": "Позволь себе принять и насладиться."
-    },
-    {
-        "name": "Влюбленные",
-        "image": "/images/lovers.jpg",
-        "meaning": "Выбор, чувства, союз.",
-        "advice": "Слушай сердце."
-    },
-    {
-        "name": "Жрица",
-        "image": "/images/high_priestess.jpg",
-        "meaning": "Интуиция, тайна, внутренний голос.",
-        "advice": "Доверься внутреннему знанию."
-    },
-    {
-        "name": "Шут",
-        "image": "/images/fool.jpg",
-        "meaning": "Новое начало, свобода, риск.",
-        "advice": "Не бойся сделать первый шаг."
-    }
-]
+# -------------------------
+# Функция подготовки карты
+# -------------------------
+def prepare_card(card):
+    is_reversed = random.choice([True, False])
 
-# ---------------------------
+    return {
+        "name": card["name"],
+        "position": "Перевёрнутая" if is_reversed else "Прямая",
+        "meaning": card["reversed"] if is_reversed else card["meaning"],
+        "advice": card["advice"]
+    }
+
+# -------------------------
 # API endpoints
-# ---------------------------
+# -------------------------
 
 @app.get("/draw-card")
 def draw_card():
-    return random.choice(cards)
+    card = random.choice(tarot_cards)
+    return prepare_card(card)
 
 
 @app.get("/draw-spread")
 def draw_spread():
-    return random.sample(cards, 3)
+    cards = random.sample(tarot_cards, 3)
 
+    return {
+        "past": prepare_card(cards[0]),
+        "present": prepare_card(cards[1]),
+        "future": prepare_card(cards[2])
+    }
 
-# ---------------------------
-# Подключаем картинки
-# ---------------------------
+# -------------------------
+# Статические файлы
+# -------------------------
+
+# картинки
 app.mount("/images", StaticFiles(directory="images"), name="images")
 
-# ---------------------------
-# Подключаем webapp (HTML страницы)
-# ---------------------------
+# HTML (главная, single, spread и т.д.)
 app.mount("/", StaticFiles(directory="webapp", html=True), name="webapp")
