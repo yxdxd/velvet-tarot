@@ -1,8 +1,8 @@
 import random
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -22,29 +22,32 @@ cards = [
     {"name": "Императрица", "image": "/images/empress.jpg"},
     {"name": "Влюбленные", "image": "/images/lovers.jpg"},
     {"name": "Шут", "image": "/images/fool.jpg"},
-    {"name": "Верховная Жрица", "image": "/images/high_priestess.jpg"},
+    {"name": "Жрица", "image": "/images/high_priestess.jpg"},
 ]
 
-# ====== HTML страницы ======
+# ===== HTML =====
 
 @app.get("/")
-def home():
+def root():
     return FileResponse("webapp/index.html")
 
-@app.get("/single")
+@app.get("/single.html")
 def single():
     return FileResponse("webapp/single.html")
 
-@app.get("/spread")
+@app.get("/spread.html")
 def spread():
     return FileResponse("webapp/spread.html")
 
-@app.get("/triple")
+@app.get("/triple.html")
 def triple():
     return FileResponse("webapp/triple.html")
 
+@app.get("/draw.html")
+def draw():
+    return FileResponse("webapp/draw.html")
 
-# ====== API ======
+# ===== API =====
 
 @app.get("/draw-card")
 def draw_card():
