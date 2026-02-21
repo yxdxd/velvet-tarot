@@ -1,4 +1,5 @@
 import random
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -15,8 +16,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 🔥 Подключаем папку images
-app.mount("/images", StaticFiles(directory="images"), name="images")
+# 🔥 Абсолютный путь к images
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+images_path = os.path.join(BASE_DIR, "images")
+
+app.mount("/images", StaticFiles(directory=images_path), name="images")
 
 
 @app.get("/draw-card")
@@ -28,6 +32,6 @@ def draw_card():
         "name": card["name"],
         "meaning": card["reversed"] if is_reversed else card["meaning"],
         "advice": card["advice"],
-        "image": f"https://velvet-tarot.onrender.com/{card['image']}",
+        "image": f"https://velvet-tarot.onrender.com/images/{card['image'].split('/')[-1]}",
         "reversed": is_reversed
     }
