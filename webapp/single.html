@@ -8,8 +8,9 @@
 <style>
 body {
   margin: 0;
+  padding: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at 50% 30%, #241b4f 0%, #0f0c22 70%);
+  background: radial-gradient(circle at top, #1b1336, #0f0a23 70%);
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   color: white;
   display: flex;
@@ -19,16 +20,13 @@ body {
 
 .container {
   text-align: center;
-  max-width: 400px;
+  width: 100%;
+  max-width: 380px;
   padding: 20px;
 }
 
-.title {
-  font-size: 22px;
-  margin-bottom: 20px;
-}
-
 button {
+  margin-top: 20px;
   padding: 14px 28px;
   border-radius: 14px;
   border: none;
@@ -43,18 +41,43 @@ button:hover {
   transform: scale(1.05);
 }
 
-.card-img {
+.card {
   margin-top: 20px;
-  width: 220px;
-  border-radius: 14px;
-  box-shadow: 0 0 20px rgba(123,92,255,0.6);
-  display: none;
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px rgba(123,92,255,0.3);
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.meaning {
+  font-size: 14px;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+
+.advice {
+  font-size: 14px;
+  margin-top: 15px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .footer {
   position: absolute;
-  bottom: 15px;
-  font-size: 13px;
+  bottom: 10px;
+  font-size: 12px;
   opacity: 0.4;
 }
 </style>
@@ -64,14 +87,11 @@ button:hover {
 
 <div class="container">
 
-  <div class="title">🔮 Одна карта</div>
+  <div style="font-size:22px; margin-bottom:20px;">🔮 Одна карта</div>
 
   <button onclick="drawCard()">Вытянуть карту</button>
 
-  <div>
-    <img id="cardImage" class="card-img">
-    <div id="cardName" style="margin-top:10px;"></div>
-  </div>
+  <div id="result"></div>
 
 </div>
 
@@ -80,18 +100,17 @@ button:hover {
 <script>
 Telegram.WebApp.expand();
 
-function drawCard() {
-  fetch("https://velvet-tarot.onrender.com/draw-card")
-    .then(res => res.json())
-    .then(data => {
-      const img = document.getElementById("cardImage");
-      const name = document.getElementById("cardName");
+async function drawCard() {
+  const response = await fetch("https://velvet-tarot.onrender.com/draw-card");
+  const data = await response.json();
 
-      img.src = "https://velvet-tarot.onrender.com" + data.image;
-      img.style.display = "block";
-
-      name.innerText = data.name;
-    });
+  document.getElementById("result").innerHTML = `
+    <div class="card">
+      <div class="title">${data.name} (${data.position})</div>
+      <div class="meaning">${data.meaning}</div>
+      <div class="advice">Совет: ${data.advice}</div>
+    </div>
+  `;
 }
 </script>
 

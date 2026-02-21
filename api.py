@@ -1,8 +1,9 @@
 import random
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+
+from tarot_cards import tarot_cards
 
 app = FastAPI()
 
@@ -14,45 +15,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Подключаем папку с картинками
+# Если потом добавим изображения
 app.mount("/images", StaticFiles(directory="images"), name="images")
 
-cards = [
-    {"name": "Маг", "image": "/images/magician.jpg"},
-    {"name": "Императрица", "image": "/images/empress.jpg"},
-    {"name": "Влюбленные", "image": "/images/lovers.jpg"},
-    {"name": "Шут", "image": "/images/fool.jpg"},
-    {"name": "Жрица", "image": "/images/high_priestess.jpg"},
-]
 
-# ===== HTML =====
+def prepare_card(card):
+    is_reversed = random.choice([True, False])
 
-@app.get("/")
-def root():
-    return FileResponse("webapp/index.html")
+    return {
+        "name": card["name"],
+        "position": "Перевёрнутая" if is_reversed else "Прямая",
+        "meaning": card["reversed"] if is_reversed else card["meaning"],
+        "advice": card["advice"],
+        "reversed": is_reversed
+    }
 
-@app.get("/single.html")
-def single():
-    return FileResponse("webapp/single.html")
-
-@app.get("/spread.html")
-def spread():
-    return FileResponse("webapp/spread.html")
-
-@app.get("/triple.html")
-def triple():
-    return FileResponse("webapp/triple.html")
-
-@app.get("/draw.html")
-def draw():
-    return FileResponse("webapp/draw.html")
-
-# ===== API =====
 
 @app.get("/draw-card")
 def draw_card():
-    return random.choice(cards)
+    card = random.choice(tarot_cards)
+    return prepare_card(card)
+
 
 @app.get("/draw-spread")
 def draw_spread():
-    return random.sample(cards, 3)
+    cards = random.sample(tarot_cards, 3)
+
+    return {
+        "past": prepare_card(cards[0]),
+        "present": prepare_card(cards[1]),
+        "future": prepare_card(cards[2])
+    }
