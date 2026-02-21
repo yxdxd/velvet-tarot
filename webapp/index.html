@@ -6,112 +6,95 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-body {
+html, body {
     margin: 0;
-    background: radial-gradient(circle at top, #1c1c3a, #0d0d1a);
-    font-family: Arial, sans-serif;
+    padding: 0;
+    height: 100%;
+    background: #0e0c1f;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     color: white;
-    text-align: center;
+    overflow-x: hidden;
 }
 
-h2 {
-    margin-top: 30px;
+/* Фиксированный фон */
+.bg {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, #241c4d 0%, #0e0c1f 60%);
+    z-index: -1;
 }
 
-.card {
-    width: 220px;
-    height: 350px;
-    margin: 40px auto;
-    perspective: 1000px;
-}
-
-.inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-}
-
-.card.flip .inner {
-    transform: rotateY(180deg);
-}
-
-.front, .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 14px;
-    backface-visibility: hidden;
-}
-
-.front {
-    background: linear-gradient(135deg, #6c5ce7, #341f97);
+/* Контейнер */
+.wrapper {
+    min-height: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    font-size: 18px;
+    align-items: center;
+    padding: 20px;
 }
 
-.back {
-    transform: rotateY(180deg);
-    background-size: cover;
-    background-position: center;
+/* Заголовок */
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 40px;
 }
 
+/* Карточка меню */
+.menu-card {
+    width: 100%;
+    max-width: 340px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* Кнопки */
 button {
-    padding: 14px 24px;
-    background: #6c5ce7;
+    width: 100%;
+    padding: 16px;
+    margin-top: 15px;
+    background: #5e54d3;
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     color: white;
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 500;
     cursor: pointer;
 }
 
-.result {
-    padding: 20px;
-    max-width: 300px;
-    margin: auto;
+button:active {
+    transform: scale(0.98);
 }
 </style>
 </head>
 
 <body>
 
-<h2>✨ Коснись карты ✨</h2>
+<div class="bg"></div>
 
-<div class="card" id="card">
-  <div class="inner">
-    <div class="front">Нажми</div>
-    <div class="back" id="cardBack"></div>
-  </div>
+<div class="wrapper">
+
+    <div class="title">✨ Velvet Tarot ✨</div>
+
+    <div class="menu-card">
+        <button onclick="startSingle()">🔮 Одна карта</button>
+        <button onclick="startTriple()">🃏 Прошлое – Настоящее – Будущее</button>
+    </div>
+
 </div>
 
-<button onclick="drawCard()">Открыть карту</button>
-
-<div class="result" id="result"></div>
-
 <script>
-const API_URL = "https://velvet-tarot.onrender.com/draw-card";
+Telegram.WebApp.expand();
 
-async function drawCard() {
-    const response = await fetch(API_URL);
-    const data = await response.json();
+function startSingle() {
+    window.location.href = "single.html";
+}
 
-    const card = document.getElementById("card");
-    const back = document.getElementById("cardBack");
-    const result = document.getElementById("result");
-
-    back.style.backgroundImage = `url(${data.image})`;
-
-    card.classList.add("flip");
-
-    result.innerHTML = `
-        <h3>${data.name}</h3>
-        <p>${data.meaning}</p>
-        <p><b>Совет:</b> ${data.advice}</p>
-    `;
+function startTriple() {
+    window.location.href = "triple.html";
 }
 </script>
 

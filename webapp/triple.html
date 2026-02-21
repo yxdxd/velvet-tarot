@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>3 карты</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #0e0c1f;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    color: white;
+}
+
+.bg {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 20%, #241c4d 0%, #0e0c1f 60%);
+    z-index: -1;
+}
+
+.wrapper {
+    min-height: 100%;
+    padding: 20px;
+}
+
+.cards {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.card {
+    width: 30%;
+    border-radius: 14px;
+}
+
+button {
+    margin-top: 30px;
+    padding: 14px 25px;
+    background: #5e54d3;
+    border: none;
+    border-radius: 14px;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="wrapper">
+
+<h3>🃏 Прошлое – Настоящее – Будущее</h3>
+<div id="cards" class="cards"></div>
+<button onclick="draw()">Открыть расклад</button>
+
+</div>
+
+<script>
+Telegram.WebApp.expand();
+
+async function draw() {
+    const res = await fetch("https://velvet-tarot.onrender.com/draw-card");
+    const data = await res.json();
+
+    const imgUrl = "https://velvet-tarot.onrender.com/" + data.image;
+
+    document.getElementById("cards").innerHTML = `
+        <img src="${imgUrl}" class="card">
+        <img src="${imgUrl}" class="card">
+        <img src="${imgUrl}" class="card">
+    `;
+}
+</script>
+
+</body>
+</html>
