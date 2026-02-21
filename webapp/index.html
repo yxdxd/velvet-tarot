@@ -8,52 +8,110 @@
 <style>
 body {
     margin: 0;
-    background: linear-gradient(180deg, #111122, #1c1c3a);
+    background: radial-gradient(circle at top, #1c1c3a, #0d0d1a);
     font-family: Arial, sans-serif;
     color: white;
     text-align: center;
 }
 
-h1 {
-    margin-top: 40px;
+h2 {
+    margin-top: 30px;
 }
 
-.menu {
-    margin-top: 40px;
+.card {
+    width: 220px;
+    height: 350px;
+    margin: 40px auto;
+    perspective: 1000px;
+}
+
+.inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.card.flip .inner {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    backface-visibility: hidden;
+}
+
+.front {
+    background: linear-gradient(135deg, #6c5ce7, #341f97);
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 0 30px;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.back {
+    transform: rotateY(180deg);
+    background-size: cover;
+    background-position: center;
 }
 
 button {
-    padding: 16px;
+    padding: 14px 24px;
+    background: #6c5ce7;
     border: none;
     border-radius: 12px;
-    background: #6c5ce7;
     color: white;
     font-size: 16px;
     cursor: pointer;
+}
+
+.result {
+    padding: 20px;
+    max-width: 300px;
+    margin: auto;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🃏 Velvet Tarot</h1>
+<h2>✨ Коснись карты ✨</h2>
 
-<div class="menu">
-    <button onclick="send('card_day')">🔮 Карта дня</button>
-    <button onclick="send('love_spread')">💖 Расклад на любовь</button>
-    <button onclick="send('situation_spread')">⚡ Расклад на ситуацию</button>
-    <button onclick="send('archetype')">🧬 Мой архетип</button>
-    <button onclick="send('month_energy')">🌙 Энергия месяца</button>
+<div class="card" id="card">
+  <div class="inner">
+    <div class="front">Нажми</div>
+    <div class="back" id="cardBack"></div>
+  </div>
 </div>
 
+<button onclick="drawCard()">Открыть карту</button>
+
+<div class="result" id="result"></div>
+
 <script>
-function send(action) {
-    Telegram.WebApp.sendData(action);
-    Telegram.WebApp.close();
+const API_URL = "https://velvet-tarot.onrender.com/draw-card";
+
+async function drawCard() {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+
+    const card = document.getElementById("card");
+    const back = document.getElementById("cardBack");
+    const result = document.getElementById("result");
+
+    back.style.backgroundImage = `url(${data.image})`;
+
+    card.classList.add("flip");
+
+    result.innerHTML = `
+        <h3>${data.name}</h3>
+        <p>${data.meaning}</p>
+        <p><b>Совет:</b> ${data.advice}</p>
+    `;
 }
 </script>
 
