@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>3 карты</title>
+<title>Velvet Tarot</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
@@ -10,41 +10,87 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #0e0c1f;
+    background: #0f0c22;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     color: white;
 }
 
+/* Фон */
 .bg {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at 50% 20%, #241c4d 0%, #0e0c1f 60%);
+    background:
+        radial-gradient(circle at 50% 30%, #241b4f 0%, #0f0c22 65%);
     z-index: -1;
 }
 
+/* Центрирование */
 .wrapper {
     min-height: 100%;
-    padding: 20px;
-}
-
-.cards {
     display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
 }
 
-.card {
-    width: 30%;
-    border-radius: 14px;
+/* Заголовок */
+.title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeIn 0.8s ease forwards;
 }
 
+/* Подзаголовок */
+.subtitle {
+    font-size: 14px;
+    opacity: 0.6;
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 0.2s;
+}
+
+/* Кнопка */
 button {
-    margin-top: 30px;
-    padding: 14px 25px;
-    background: #5e54d3;
+    padding: 15px 28px;
+    background: linear-gradient(135deg, #6a5cff, #8a7bff);
     border: none;
     border-radius: 14px;
     color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(106,92,255,0.3);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 0.4s;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+/* Анимация */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Подвал */
+.footer {
+    position: absolute;
+    bottom: 15px;
+    font-size: 13px;
+    opacity: 0.4;
 }
 </style>
 </head>
@@ -55,26 +101,23 @@ button {
 
 <div class="wrapper">
 
-<h3>🃏 Прошлое – Настоящее – Будущее</h3>
-<div id="cards" class="cards"></div>
-<button onclick="draw()">Открыть расклад</button>
+    <div class="title">🃏 Прошлое – Настоящее – Будущее</div>
+
+    <div class="subtitle">
+        Три карты покажут путь, по которому ты идёшь
+    </div>
+
+    <button onclick="openSpread()">Открыть расклад</button>
 
 </div>
+
+<div class="footer">@VelvetTarotBot</div>
 
 <script>
 Telegram.WebApp.expand();
 
-async function draw() {
-    const res = await fetch("https://velvet-tarot.onrender.com/draw-card");
-    const data = await res.json();
-
-    const imgUrl = "https://velvet-tarot.onrender.com/" + data.image;
-
-    document.getElementById("cards").innerHTML = `
-        <img src="${imgUrl}" class="card">
-        <img src="${imgUrl}" class="card">
-        <img src="${imgUrl}" class="card">
-    `;
+function openSpread() {
+    window.location.href = "spread.html";
 }
 </script>
 
